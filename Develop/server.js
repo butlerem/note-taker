@@ -10,15 +10,6 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// HTML Routes
-app.get('/notes', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/notes.html'));
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/index.html'));
-});
-
 // API Routes
 app.get('/api/notes', (req, res) => {
   fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -40,6 +31,15 @@ app.post('/api/notes', (req, res) => {
       res.json(newNote);
     });
   });
+});
+
+// HTML Routes
+app.get('/notes', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/notes.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 // Delete route
