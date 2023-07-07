@@ -42,10 +42,31 @@ app.post('/api/notes', (req, res) => {
   });
 });
 
-// Delete route (to be implemented)
-// app.delete('/api/notes/:id', (req, res) => {
-//  Your code here
-// });
+// Delete route
+  app.delete('/api/notes/:id', (req, res) => {
+    // The id of the note to delete is in the URL, we get it using req.params.id
+    const noteId = req.params.id;
+    
+    // Read the db.json file
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+      if (err) throw err;
+      
+      // Parse the file contents into a JavaScript array
+      let notes = JSON.parse(data);
+      
+      // Filter out the note with the given id
+      const filteredNotes = notes.filter(note => note.id !== noteId);
+      
+      // Write the filtered notes back to db.json
+      fs.writeFile('./db/db.json', JSON.stringify(filteredNotes, null, 2), err => {
+        if (err) throw err;
+        
+        // Send a success response back to the client
+        res.json({message: "Note deleted successfully"});
+      });
+    });
+  });
+  
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
